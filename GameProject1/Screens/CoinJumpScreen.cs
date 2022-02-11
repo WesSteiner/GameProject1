@@ -35,5 +35,35 @@ namespace GameProject1.Screens
                 );
             _screenManager = sM;
         }
+
+        public override void Activate()
+        {
+            base.Activate();
+        }
+
+        public override void Deactivate()
+        {
+            base.Deactivate();
+        }
+
+        public override void Unload()
+        {
+            base.Unload();
+        }
+
+        public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
+        {
+            base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
+        }
+
+        public override void HandleInput(GameTime gameTime, InputState input)
+        {
+            base.HandleInput(gameTime, input);
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            base.Draw(gameTime);
+        }
     }
 }

@@ -69,7 +69,7 @@ namespace GameProject1.Screens
 
             if(inputManager.Click && key.Click1)
             {
-                _screenManager.AddScreen(new CoinJumpScreen(), null);
+                _screenManager.AddScreen(new CoinJumpScreen(_screenManager), null);
             }
 
             if(inputManager.Click && key.Click2)
