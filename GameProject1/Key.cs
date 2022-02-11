@@ -63,7 +63,7 @@ namespace GameProject1
             inputManager.Update(gameTime);
             GameTime = gameTime;
             Position = inputManager.MousePosition;
-            Bounds = new BoundingRectangle(new Vector2(inputManager.MousePosition.X, inputManager.MousePosition.Y), 50, 50);
+            Bounds = new BoundingRectangle(new Vector2(inputManager.MousePosition.X, inputManager.MousePosition.Y), 50, 50);            
             foreach(Keyhole k in keyholes)
             {
                 if (k.Bounds.CollidesWith(Bounds) && inputManager.Click && k.Action == "Play")

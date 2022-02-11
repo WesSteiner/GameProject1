@@ -90,6 +90,8 @@ namespace GameProject1
 
             #region On Click
 
+            Click = false;
+
             if (currentMouseState.LeftButton == ButtonState.Pressed && priorMouseState.LeftButton == ButtonState.Released)
             {
                 Click = true;
