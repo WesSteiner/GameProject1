@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using GameProject1.Screens;
 using GameProject1.StateManagement;
+using GameProject1.Collisions;
 
 namespace GameProject1
 {
@@ -11,6 +12,7 @@ namespace GameProject1
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private readonly ScreenManager _screenMangaer;
+        private InputManager inputManager;
 
         public Game1()
         {
@@ -29,7 +31,21 @@ namespace GameProject1
 
         private void AdditionalScreens()
         {
-            _screenMangaer.AddScreen(new KeyholeScreen(), null);
+            inputManager = new InputManager();
+            _screenMangaer.AddScreen(new KeyholeScreen(_screenMangaer)
+            {
+                keyholePositions =
+                {
+                    new Keyhole(this, Color.White) {Position = new Vector2(150, 200), Bounds = new BoundingRectangle(new Vector2(150, 200), 64, 64), Action = "None"},
+                    new Keyhole(this, Color.White) {Position = new Vector2(250, 200), Bounds = new BoundingRectangle(new Vector2(250, 200), 64, 64), Action = "None"},
+                    new Keyhole(this, Color.White) {Position = new Vector2(350, 200), Bounds = new BoundingRectangle(new Vector2(350, 200), 64, 64), Action = "Play"},
+                    new Keyhole(this, Color.White) {Position = new Vector2(450, 200), Bounds = new BoundingRectangle(new Vector2(450, 200), 64, 64), Action = "Options"},
+                    new Keyhole(this, Color.White) {Position = new Vector2(550, 200), Bounds = new BoundingRectangle(new Vector2(550, 200), 64, 64), Action = "Exit"}
+                },
+                inputManager = inputManager,
+                key = new Key(this)
+            },
+                null);
         }
 
         protected override void Initialize()
@@ -37,6 +53,8 @@ namespace GameProject1
             // TODO: Add your initialization logic here
 
             base.Initialize();
+
+            inputManager = new InputManager();
         }
 
         protected override void LoadContent()
