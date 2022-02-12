@@ -16,9 +16,13 @@ namespace GameProject1
         Color color;
         Game game;
 
+        private GamePadState gamePadState;
+        private KeyboardState keyboardState;
+        private bool flipped;
+
         public GameTime GameTime { get; set; }
 
-        public Vector2 Position { get; set; }
+        public Vector2 position = new Vector2(200, 200);
 
         public BoundingRectangle Bounds { get; set; }
 
@@ -33,18 +37,38 @@ namespace GameProject1
             texture = game.Content.Load<Texture2D>("OrangePerson");
         }
 
-        public void Update(GameTime gameTime, List<Coin> coins, InputManager inputManager)
+        public void Update(GameTime gameTime, List<Coin> coins)
         {
-            inputManager.Update(gameTime);
-            GameTime = gameTime;
-            Position = inputManager.Direction;
-            Bounds = new BoundingRectangle(new Vector2(inputManager.Direction.X, inputManager.Direction.Y), 50, 50);
+            GameTime = gameTime;            
+            Bounds = new BoundingRectangle(new Vector2(position.X, position.Y), 50, 50);
+
+            gamePadState = GamePad.GetState(0);
+            keyboardState = Keyboard.GetState();
+
+            // Apply the gamepad movement with inverted Y axis
+            position += gamePadState.ThumbSticks.Left * new Vector2(1, -1);
+            if (gamePadState.ThumbSticks.Left.X < 0) flipped = true;
+            if (gamePadState.ThumbSticks.Left.X > 0) flipped = false;
+
+            // Apply keyboard movement
+            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
+            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
+            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
+            {
+                position += new Vector2(-1, 0);
+                flipped = true;
+            }
+            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
+            {
+                position += new Vector2(1, 0);
+                flipped = false;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             if (texture is null) throw new InvalidOperationException("Texture must be loaded to render");
-            spriteBatch.Draw(texture, Position, color);
+            spriteBatch.Draw(texture, position, color);
         }
     }
 }

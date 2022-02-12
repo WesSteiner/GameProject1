@@ -61,7 +61,7 @@ namespace GameProject1.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            _player.Update(gameTime, _coins, inputManager);
+            _player.Update(gameTime, _coins);
         }
 
         public override void HandleInput(GameTime gameTime, InputState input)
