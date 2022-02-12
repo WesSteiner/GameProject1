@@ -16,6 +16,8 @@ namespace GameProject1
         Color color;
         Game game;
 
+        public GameTime GameTime { get; set; }
+
         public Vector2 Position { get; set; }
 
         public BoundingRectangle Bounds { get; set; }
@@ -29,6 +31,14 @@ namespace GameProject1
         public void LoadContent()
         {
             texture = game.Content.Load<Texture2D>("OrangePerson");
+        }
+
+        public void Update(GameTime gameTime, List<Coin> coins, InputManager inputManager)
+        {
+            inputManager.Update(gameTime);
+            GameTime = gameTime;
+            Position = inputManager.Direction;
+            Bounds = new BoundingRectangle(new Vector2(inputManager.Direction.X, inputManager.Direction.Y), 50, 50);
         }
 
         public void Draw(SpriteBatch spriteBatch)

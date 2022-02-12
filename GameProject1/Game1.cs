@@ -11,7 +11,7 @@ namespace GameProject1
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private readonly ScreenManager _screenMangaer;
+        private readonly ScreenManager _screenManager;
         private InputManager inputManager;
 
         public Game1()
@@ -23,8 +23,8 @@ namespace GameProject1
             var screenFactory = new ScreenFactory();
             Services.AddService(typeof(IScreenFactory), screenFactory);
 
-            _screenMangaer = new ScreenManager(this);
-            Components.Add(_screenMangaer);
+            _screenManager = new ScreenManager(this);
+            Components.Add(_screenManager);
 
             AdditionalScreens();
         }
@@ -32,7 +32,22 @@ namespace GameProject1
         private void AdditionalScreens()
         {
             inputManager = new InputManager();
-            _screenMangaer.AddScreen(new KeyholeScreen(_screenMangaer)
+
+            _screenManager.AddScreen(new CoinJumpScreen(_screenManager)
+            {
+                _coins =
+                {
+                    new Coin(this, Color.White) {Position = new Vector2(150, 200)},
+                    new Coin(this, Color.White) {Position = new Vector2(250, 200)},
+                    new Coin(this, Color.White) {Position = new Vector2(350, 200)},
+                    new Coin(this, Color.White) {Position = new Vector2(450, 200)},
+                    new Coin(this, Color.White) {Position = new Vector2(550, 200)}
+                },
+                inputManager = inputManager,
+                _player = new Person(this, Color.White)
+            }, null);
+
+            _screenManager.AddScreen(new KeyholeScreen(_screenManager)
             {
                 keyholePositions =
                 {
@@ -44,8 +59,7 @@ namespace GameProject1
                 },
                 inputManager = inputManager,
                 key = new Key(this)
-            },
-                null);
+            }, null);   
         }
 
         protected override void Initialize()
