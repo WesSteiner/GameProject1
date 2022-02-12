@@ -15,8 +15,13 @@ namespace GameProject1.Screens
     {
         private ContentManager _content;
         private SpriteFont _gameFont;
+        private Game _game;
+
         public Person _player;
+        public bool Win { get; set; } = false;
+
         public List<Coin> _coins = new List<Coin>();
+        private int counter;
 
         public InputManager inputManager;
 
@@ -26,14 +31,16 @@ namespace GameProject1.Screens
         private float _pauseAlpha;
         private readonly InputAction _pauseAction;
 
-        public CoinJumpScreen(ScreenManager sM)
+        public CoinJumpScreen(ScreenManager sM, Game game)
         {
             _pauseAction = new InputAction(
                 new[] { Buttons.Start, Buttons.Back },
                 new[] { Keys.Back, Keys.Escape },
                 true
                 );
-            _screenManager = sM;            
+            _screenManager = sM;
+            _game = game;
+            counter = 0;
         }
 
         public override void Activate()
@@ -60,8 +67,22 @@ namespace GameProject1.Screens
         public override void Update(GameTime gameTime, bool otherScreenHasFocus, bool coveredByOtherScreen)
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
-
+            System.Random random = new System.Random();
             _player.Update(gameTime, _coins);
+
+            foreach(Coin c in _coins)
+            {
+                c.Update(gameTime);
+                if(!c.Collected && c.Bounds.CollidesWith(_player.Bounds))
+                {
+                    c.Collected = true;
+                    counter++;
+                }
+                if(counter == _coins.Count)
+                {
+                    Win = true;
+                }
+            }
         }
 
         public override void HandleInput(GameTime gameTime, InputState input)
@@ -79,6 +100,13 @@ namespace GameProject1.Screens
 
             foreach (Coin c in _coins) c.Draw(spriteBatch);
             _player.Draw(spriteBatch);
+            spriteBatch.DrawString(_gameFont, "Coins: " + counter, new Vector2(2, 2), Color.Gold);
+            if (Win)
+            {
+                spriteBatch.DrawString(_gameFont, "You did it!", new Vector2(2, 200), Color.Gold);
+                spriteBatch.DrawString(_gameFont, "It's not a lot,", new Vector2(2, 250), Color.Gold);
+                spriteBatch.DrawString(_gameFont, "but in the future he'll jump!", new Vector2(2, 300), Color.Gold);
+            }
 
             spriteBatch.End();
         }

@@ -22,9 +22,10 @@ namespace GameProject1
 
         public GameTime GameTime { get; set; }
 
-        public Vector2 position = new Vector2(200, 200);
+        public Vector2 position = new Vector2(330, 300);
 
-        public BoundingRectangle Bounds { get; set; }
+        private BoundingRectangle bounds = new BoundingRectangle(new Vector2(330 - 55, 300 - 55), 50, 50);
+        public BoundingRectangle Bounds => bounds;
 
         public Person(Game game, Color color)
         {
@@ -40,7 +41,6 @@ namespace GameProject1
         public void Update(GameTime gameTime, List<Coin> coins)
         {
             GameTime = gameTime;            
-            Bounds = new BoundingRectangle(new Vector2(position.X, position.Y), 50, 50);
 
             gamePadState = GamePad.GetState(0);
             keyboardState = Keyboard.GetState();
@@ -51,24 +51,29 @@ namespace GameProject1
             if (gamePadState.ThumbSticks.Left.X > 0) flipped = false;
 
             // Apply keyboard movement
-            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -1);
-            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 1);
+            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -5);
+            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 5);
             if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
             {
-                position += new Vector2(-1, 0);
+                position += new Vector2(-5, 0);
                 flipped = true;
             }
             if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
             {
-                position += new Vector2(1, 0);
+                position += new Vector2(5, 0);
                 flipped = false;
             }
+
+            bounds.X = position.X - 55;
+            bounds.Y = position.Y - 55;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             if (texture is null) throw new InvalidOperationException("Texture must be loaded to render");
-            spriteBatch.Draw(texture, position, color);
+
+            SpriteEffects spriteEffects = (!flipped) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            spriteBatch.Draw(texture, position, null, color, 0, new Vector2(64, 64), 1, spriteEffects, 0);
         }
     }
 }

@@ -32,16 +32,16 @@ namespace GameProject1
         private void AdditionalScreens()
         {
             inputManager = new InputManager();
-
-            _screenManager.AddScreen(new CoinJumpScreen(_screenManager)
+            System.Random rand = new System.Random();
+            _screenManager.AddScreen(new CoinJumpScreen(_screenManager, this)
             {
                 _coins =
                 {
-                    new Coin(this, Color.White) {Position = new Vector2(150, 200)},
-                    new Coin(this, Color.White) {Position = new Vector2(250, 200)},
-                    new Coin(this, Color.White) {Position = new Vector2(350, 200)},
-                    new Coin(this, Color.White) {Position = new Vector2(450, 200)},
-                    new Coin(this, Color.White) {Position = new Vector2(550, 200)}
+                    new Coin(this, Color.White, new Vector2(150, 200)) { Direction = Direction.Down}, 
+                    new Coin(this, Color.White, new Vector2(250, 200)) { Direction = Direction.Up},
+                    new Coin(this, Color.White, new Vector2(350, 200)) { Direction = Direction.Down}, 
+                    new Coin(this, Color.White, new Vector2(450, 200)) { Direction = Direction.Right}, 
+                    new Coin(this, Color.White, new Vector2(550, 200)) { Direction = Direction.Left}
                 },
                 inputManager = inputManager,
                 _player = new Person(this, Color.White)
