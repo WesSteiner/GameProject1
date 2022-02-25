@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using GameProject1.Screens;
 using GameProject1.StateManagement;
 using GameProject1.Collisions;
@@ -13,6 +15,9 @@ namespace GameProject1
         private SpriteBatch _spriteBatch;
         private readonly ScreenManager _screenManager;
         private InputManager inputManager;
+
+        private SoundEffect coin;
+        private Song backgroundMusic;
 
         public Game1()
         {
@@ -76,6 +81,10 @@ namespace GameProject1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+            coin = Content.Load<SoundEffect>("coin-audio");
+            backgroundMusic = Content.Load<Song>("8-bit-beebop");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Play(backgroundMusic);
         }
 
         protected override void Update(GameTime gameTime)
