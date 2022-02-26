@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using GameProject1.StateManagement;
 using GameProject1.Collisions;
+using Microsoft.Xna.Framework.Audio;
 
 namespace GameProject1
 {
@@ -24,6 +25,7 @@ namespace GameProject1
         private double directionTimer;
         private Color color;
         private Game game;
+        private SoundEffect coin;
 
         public Direction Direction;
 
@@ -45,12 +47,19 @@ namespace GameProject1
         public void LoadContent()
         {
             texture = game.Content.Load<Texture2D>("Coin");
+            coin = game.Content.Load<SoundEffect>("Pickup_Coin15");
         }
 
         public void Update(GameTime gameTime)
         {
             //Update direction timer
             directionTimer += gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (Collected)
+            {
+                coin.Play();
+                Collected = false;
+            }
 
             //switch direction every 2 secs
             if (directionTimer > 2.0)

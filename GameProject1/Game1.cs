@@ -81,7 +81,6 @@ namespace GameProject1
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
-            coin = Content.Load<SoundEffect>("coin-audio");
             backgroundMusic = Content.Load<Song>("8-bit-beebop");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(backgroundMusic);
