@@ -13,6 +13,7 @@ namespace GameProject1.Screens
 {
     public class CoinJumpScreen : GameScreen
     {
+        public InputManager inputManager;
         private ContentManager _content;
         private SpriteFont _gameFont;
         private Game _game;
@@ -22,8 +23,6 @@ namespace GameProject1.Screens
 
         public List<Coin> _coins = new List<Coin>();
         private int counter;
-
-        public InputManager inputManager;
 
         private readonly Random _random = new Random();
         private readonly ScreenManager _screenManager;
@@ -68,7 +67,7 @@ namespace GameProject1.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
             System.Random random = new System.Random();
-            _player.Update(gameTime, _coins);
+            _player.Update(gameTime);
 
             foreach(Coin c in _coins)
             {
@@ -99,7 +98,7 @@ namespace GameProject1.Screens
             spriteBatch.Begin();
 
             foreach (Coin c in _coins) c.Draw(spriteBatch);
-            _player.Draw(spriteBatch);
+            _player.Draw(gameTime, spriteBatch);
             spriteBatch.DrawString(_gameFont, "Coins: " + counter, new Vector2(2, 2), Color.Gold);
             if (Win)
             {

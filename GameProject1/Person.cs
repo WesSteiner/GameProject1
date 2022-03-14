@@ -12,9 +12,11 @@ namespace GameProject1
 {
     public class Person
     {
-        Texture2D texture;
-        Color color;
+        Texture2D texture;       
         Game game;
+
+        private Color color;
+        public Color Color { get; set; }
 
         private GamePadState gamePadState;
         private KeyboardState keyboardState;
@@ -38,7 +40,7 @@ namespace GameProject1
             texture = game.Content.Load<Texture2D>("OrangePerson");
         }
 
-        public void Update(GameTime gameTime, List<Coin> coins)
+        public void Update(GameTime gameTime)
         {
             GameTime = gameTime;            
 
@@ -68,7 +70,7 @@ namespace GameProject1
             bounds.Y = position.Y - 55;
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             if (texture is null) throw new InvalidOperationException("Texture must be loaded to render");
 
