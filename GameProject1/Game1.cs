@@ -26,6 +26,8 @@ namespace GameProject1
             _screenManager = new ScreenManager(this);
             Components.Add(_screenManager);
 
+            _graphics.GraphicsProfile = GraphicsProfile.HiDef;
+
             AdditionalScreens();
         }
 
@@ -33,6 +35,15 @@ namespace GameProject1
         {
             inputManager = new InputManager();
             System.Random rand = new System.Random();
+
+            _screenManager.AddScreen(new ColorRunScreen(this)
+            {
+                inputManager = inputManager,
+                _player = new Person(this, Color.White)
+            },            
+            null);
+
+            /*
             _screenManager.AddScreen(new CoinJumpScreen(_screenManager, this)
             {
                 _coins =
@@ -46,6 +57,7 @@ namespace GameProject1
                 inputManager = inputManager,
                 _player = new Person(this, Color.White)
             }, null);
+            */
 
             _screenManager.AddScreen(new KeyholeScreen(_screenManager)
             {
