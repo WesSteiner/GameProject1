@@ -18,19 +18,24 @@ namespace GameProject1.Screens
         private ContentManager _content;
         private SpriteFont _gameFont;
         private Game _game;
+        private IParticleEmitter _gameEmitter;
         private Texture2D _foreground;
 
         public Person _player;
         public bool Win { get; set; } = false;
 
-        public ColorRunScreen(Game game)
+        public ColorRunScreen(Game game, IParticleEmitter gameEmitter)
         {
             _game = game;
+            _gameEmitter = gameEmitter;
         }
 
         public override void Activate()
         {
             base.Activate();
+
+            PixieParticalSystem pixie = new PixieParticalSystem(_game, _gameEmitter);
+            _game.Components.Add(pixie);
 
             if (_content == null) _content = new ContentManager(ScreenManager.Game.Services, "Content");
            
@@ -54,6 +59,12 @@ namespace GameProject1.Screens
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
             _player.Update(gameTime);
+
+            MouseState currentMouse = Mouse.GetState();
+            Vector2 mousePosition = new Vector2(currentMouse.X, currentMouse.Y);
+            
+            _gameEmitter.Velocity = mousePosition - _gameEmitter.Position;
+            _gameEmitter.Position = mousePosition;
         }
 
         public override void HandleInput(GameTime gameTime, InputState input)
@@ -72,7 +83,7 @@ namespace GameProject1.Screens
             spriteBatch.End();
 
 
-            float playerY = MathHelper.Clamp(_player.position.Y, 900, 300);
+            float playerY = MathHelper.Clamp(_player.position.Y, 300, 9800);
             float offsetY = 300 - playerY;
 
             Matrix transform = Matrix.CreateTranslation(0, offsetY, 0);

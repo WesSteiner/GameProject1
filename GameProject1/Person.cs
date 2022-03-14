@@ -26,6 +26,8 @@ namespace GameProject1
 
         public Vector2 position = new Vector2(330, 300);
 
+        public Rectangle personBounds = new Rectangle(0, 0, 64, 64);
+
         private BoundingRectangle bounds = new BoundingRectangle(new Vector2(330 - 55, 300 - 55), 50, 50);
         public BoundingRectangle Bounds => bounds;
 
@@ -53,18 +55,20 @@ namespace GameProject1
             if (gamePadState.ThumbSticks.Left.X > 0) flipped = false;
 
             // Apply keyboard movement
-            if (keyboardState.IsKeyDown(Keys.Up) || keyboardState.IsKeyDown(Keys.W)) position += new Vector2(0, -5);
-            if (keyboardState.IsKeyDown(Keys.Down) || keyboardState.IsKeyDown(Keys.S)) position += new Vector2(0, 5);
-            if (keyboardState.IsKeyDown(Keys.Left) || keyboardState.IsKeyDown(Keys.A))
+            float t = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (keyboardState.IsKeyDown(Keys.A)) 
             {
-                position += new Vector2(-5, 0);
+                position -= Vector2.UnitX * 100 * t;
                 flipped = true;
-            }
-            if (keyboardState.IsKeyDown(Keys.Right) || keyboardState.IsKeyDown(Keys.D))
+            } 
+            if (keyboardState.IsKeyDown(Keys.D))
             {
-                position += new Vector2(5, 0);
+                position += Vector2.UnitX * 100 * t;
                 flipped = false;
             }
+            if (keyboardState.IsKeyDown(Keys.W)) position -= Vector2.UnitY * 200 * t;
+            if (keyboardState.IsKeyDown(Keys.S)) position += Vector2.UnitY * 200 * t;
 
             bounds.X = position.X - 55;
             bounds.Y = position.Y - 55;
@@ -75,7 +79,7 @@ namespace GameProject1
             if (texture is null) throw new InvalidOperationException("Texture must be loaded to render");
 
             SpriteEffects spriteEffects = (!flipped) ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-            spriteBatch.Draw(texture, position, null, color, 0, new Vector2(64, 64), 1, spriteEffects, 0);
+            spriteBatch.Draw(texture, position, personBounds, color, 0, new Vector2(64, 64), 1, spriteEffects, 0);
         }
     }
 }

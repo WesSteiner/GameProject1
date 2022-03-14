@@ -9,7 +9,7 @@ using GameProject1.Collisions;
 
 namespace GameProject1
 {
-    public class Game1 : Game
+    public class Game1 : Game, IParticleEmitter
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
@@ -18,6 +18,10 @@ namespace GameProject1
 
         private SoundEffect coin;
         private Song backgroundMusic;
+
+        public Vector2 Position { get; set; }
+
+        public Vector2 Velocity { get; set; }
 
         public Game1()
         {
@@ -41,7 +45,7 @@ namespace GameProject1
             inputManager = new InputManager();
             System.Random rand = new System.Random();
 
-            _screenManager.AddScreen(new ColorRunScreen(this)
+            _screenManager.AddScreen(new ColorRunScreen(this, this)
             {
                 inputManager = inputManager,
                 _player = new Person(this, Color.White)
@@ -81,8 +85,7 @@ namespace GameProject1
 
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
-
+            // TODO: Add your initialization logic here            
             base.Initialize();
 
             inputManager = new InputManager();
@@ -102,7 +105,6 @@ namespace GameProject1
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
             // TODO: Add your update logic here
 
             base.Update(gameTime);
