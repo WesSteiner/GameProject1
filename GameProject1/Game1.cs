@@ -48,8 +48,9 @@ namespace GameProject1
             _screenManager.AddScreen(new ColorRunScreen(this, this)
             {
                 inputManager = inputManager,
-                _player = new Person(this, Color.White)
-            },            
+                _player = new Person(this, Color.White),
+                _tilemap = new Tilemap("map")
+            },
             null);
 
             /*

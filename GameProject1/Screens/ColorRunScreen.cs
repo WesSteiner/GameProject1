@@ -21,6 +21,8 @@ namespace GameProject1.Screens
         private IParticleEmitter _gameEmitter;
         private Texture2D _foreground;
 
+        public Tilemap _tilemap;
+
         public Person _player;
         public bool Win { get; set; } = false;
 
@@ -42,6 +44,7 @@ namespace GameProject1.Screens
             _gameFont = _content.Load<SpriteFont>("PixelFont");
             _player.LoadContent();
             _foreground = _content.Load<Texture2D>("foreground");
+            _tilemap.LoadContent(_game.Content);
         }
 
         public override void Deactivate()
@@ -88,6 +91,11 @@ namespace GameProject1.Screens
 
             Matrix transform = Matrix.CreateTranslation(0, offsetY, 0);
             // Foreground
+
+            spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(23, 23, 0));
+            _tilemap.Draw(gameTime, spriteBatch);
+            spriteBatch.End();
+
             transform = Matrix.CreateTranslation(0, offsetY, 0);
             spriteBatch.Begin(transformMatrix: transform);
             spriteBatch.Draw(_foreground, Vector2.Zero, Color.White);
