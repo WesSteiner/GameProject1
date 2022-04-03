@@ -91,11 +91,6 @@
 /processorParam:TextureFormat=Color
 /build:KeyholeSprite.png
 
-#begin map.txt
-/importer:
-/processor:
-/build:map.txt
-
 #begin OrangePerson.png
 /importer:TextureImporter
 /processor:TextureProcessor
