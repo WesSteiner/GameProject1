@@ -28,6 +28,10 @@ namespace GameProject1
         /// </summary>
         Game game;
 
+        Texture2D texture; 
+
+        Vector2 position = new Vector2(330, 300);
+
         /// <summary>
         /// Constructs a cube instance
         /// </summary>
@@ -35,6 +39,7 @@ namespace GameProject1
         public Cube(Game1 game)
         {
             this.game = game;
+            this.texture = game.Content.Load<Texture2D>("KeyholeSprite");
             InitializeVertices();
             InitializeIndices();
             InitializeEffect();
@@ -46,14 +51,14 @@ namespace GameProject1
         public void InitializeVertices()
         {
             var vertexData = new VertexPositionColor[] {
-            new VertexPositionColor() { Position = new Vector3(-3,  3, -3), Color = Color.Blue },
-            new VertexPositionColor() { Position = new Vector3( 3,  3, -3), Color = Color.Green },
-            new VertexPositionColor() { Position = new Vector3(-3, -3, -3), Color = Color.Red },
-            new VertexPositionColor() { Position = new Vector3( 3, -3, -3), Color = Color.Cyan },
-            new VertexPositionColor() { Position = new Vector3(-3,  3,  3), Color = Color.Blue },
-            new VertexPositionColor() { Position = new Vector3( 3,  3,  3), Color = Color.Red },
-            new VertexPositionColor() { Position = new Vector3(-3, -3,  3), Color = Color.Green },
-            new VertexPositionColor() { Position = new Vector3( 3, -3,  3), Color = Color.Cyan }
+            new VertexPositionColor() { Position = new Vector3(-1,  1, -1), Color = Color.Blue },
+            new VertexPositionColor() { Position = new Vector3( 1,  1, -1), Color = Color.Green },
+            new VertexPositionColor() { Position = new Vector3(-1, -1, -1), Color = Color.Red },
+            new VertexPositionColor() { Position = new Vector3( 1, -1, -1), Color = Color.Cyan },
+            new VertexPositionColor() { Position = new Vector3(-1,  1,  1), Color = Color.Blue },
+            new VertexPositionColor() { Position = new Vector3( 1,  1,  1), Color = Color.Red },
+            new VertexPositionColor() { Position = new Vector3(-1, -1,  1), Color = Color.Green },
+            new VertexPositionColor() { Position = new Vector3( 1, -1,  1), Color = Color.Cyan }
         };
             vertices = new VertexBuffer(
                 game.GraphicsDevice,            // The graphics device to load the buffer on 
