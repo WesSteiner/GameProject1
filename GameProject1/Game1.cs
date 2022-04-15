@@ -6,18 +6,30 @@ using Microsoft.Xna.Framework.Media;
 using GameProject1.Screens;
 using GameProject1.StateManagement;
 using GameProject1.Collisions;
+using System.Collections.Generic;
 
 namespace GameProject1
 {
     public class Game1 : Game, IParticleEmitter
     {
         private GraphicsDeviceManager _graphics;
+
         private SpriteBatch _spriteBatch;
-        private readonly ScreenManager _screenManager;
-        private InputManager inputManager;
+
+        private ScreenManager _screenManager;
+        private InputManager _inputManager;
 
         private SoundEffect coin;
         private Song backgroundMusic;
+
+        private SpriteFont _gameFont;
+        private Texture2D _foreground;
+        public List<Cube> _cubes = new List<Cube>();
+        public Person _player;
+
+        public bool Win { get; set; } = false;
+
+        public ColorRunScreen CRN;
 
         public Vector2 Position { get; set; }
 
@@ -37,23 +49,26 @@ namespace GameProject1
 
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
+            _player = new Person(this, Color.White);            
+
             AdditionalScreens();
         }
 
         private void AdditionalScreens()
         {
-            inputManager = new InputManager();
+            _inputManager = new InputManager();
             System.Random rand = new System.Random();
-
-            _screenManager.AddScreen(new ColorRunScreen(this, this)
+            /*
+            CRN = new ColorRunScreen(this, this) 
             {
                 inputManager = inputManager,
                 _player = new Person(this, Color.White),
-                _tilemap = new Tilemap("map")
-            },
-            null);
+                _cubes = { new Cube(this) }
+            };
 
-            /*
+            _screenManager.AddScreen(CRN, null);
+
+            
             _screenManager.AddScreen(new CoinJumpScreen(_screenManager, this)
             {
                 _coins =
@@ -67,7 +82,7 @@ namespace GameProject1
                 inputManager = inputManager,
                 _player = new Person(this, Color.White)
             }, null);
-            */
+            
 
             _screenManager.AddScreen(new KeyholeScreen(_screenManager)
             {
@@ -81,7 +96,8 @@ namespace GameProject1
                 },
                 inputManager = inputManager,
                 key = new Key(this)
-            }, null);   
+            }, null);  
+            */
         }
 
         protected override void Initialize()
@@ -89,7 +105,7 @@ namespace GameProject1
             // TODO: Add your initialization logic here            
             base.Initialize();
 
-            inputManager = new InputManager();
+            _inputManager = new InputManager();
         }
 
         protected override void LoadContent()
@@ -100,6 +116,11 @@ namespace GameProject1
             backgroundMusic = Content.Load<Song>("8-bit-beebop");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Play(backgroundMusic);
+
+            _gameFont = Content.Load<SpriteFont>("PixelFont");
+            _player.LoadContent();
+            _foreground = Content.Load<Texture2D>("foreground");
+            _cubes.Add(new Cube(this));
         }
 
         protected override void Update(GameTime gameTime)
@@ -109,6 +130,9 @@ namespace GameProject1
             // TODO: Add your update logic here
 
             base.Update(gameTime);
+
+            _player.Update(gameTime);
+            foreach (Cube cube in _cubes) { cube.Update(gameTime); }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -118,6 +142,22 @@ namespace GameProject1
             // TODO: Add your drawing code here
 
             base.Draw(gameTime);
+
+            float playerY = MathHelper.Clamp(_player.position.Y, 300, 9800);
+            float offsetY = 300 - playerY;
+
+            Matrix transform = Matrix.CreateTranslation(0, offsetY, 0);
+            // Foreground
+
+            transform = Matrix.CreateTranslation(0, offsetY, 0);
+            _spriteBatch.Begin(transformMatrix: transform);
+            _spriteBatch.Draw(_foreground, Vector2.Zero, Color.White);
+            _player.Draw(gameTime, _spriteBatch);
+            _spriteBatch.End();
+
+            _spriteBatch.Begin();
+            foreach (Cube cube in _cubes) { cube.Draw(); }
+            _spriteBatch.End();
         }
     }
 }

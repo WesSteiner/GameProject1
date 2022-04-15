@@ -17,16 +17,16 @@ namespace GameProject1.Screens
         
         private ContentManager _content;
         private SpriteFont _gameFont;
-        private Game _game;
+        private Game1 _game;
         private IParticleEmitter _gameEmitter;
         private Texture2D _foreground;
 
-        public Tilemap _tilemap;
-
+        public List<Cube> _cubes = new List<Cube>();
         public Person _player;
+
         public bool Win { get; set; } = false;
 
-        public ColorRunScreen(Game game, IParticleEmitter gameEmitter)
+        public ColorRunScreen(Game1 game, IParticleEmitter gameEmitter)
         {
             _game = game;
             _gameEmitter = gameEmitter;
@@ -34,7 +34,7 @@ namespace GameProject1.Screens
 
         public override void Activate()
         {
-            base.Activate();
+            base.Activate();           
 
             PixieParticalSystem pixie = new PixieParticalSystem(_game, _gameEmitter);
             _game.Components.Add(pixie);
@@ -44,7 +44,6 @@ namespace GameProject1.Screens
             _gameFont = _content.Load<SpriteFont>("PixelFont");
             _player.LoadContent();
             _foreground = _content.Load<Texture2D>("foreground");
-            _tilemap.LoadContent(_game.Content);
         }
 
         public override void Deactivate()
@@ -68,6 +67,8 @@ namespace GameProject1.Screens
             
             _gameEmitter.Velocity = mousePosition - _gameEmitter.Position;
             _gameEmitter.Position = mousePosition;
+
+            foreach(Cube cube in _cubes) { cube.Update(gameTime); }
         }
 
         public override void HandleInput(GameTime gameTime, InputState input)
@@ -77,14 +78,12 @@ namespace GameProject1.Screens
 
         public override void Draw(GameTime gameTime)
         {
+            _game.GraphicsDevice.Clear(Color.CornflowerBlue);
+
             base.Draw(gameTime);
 
+            
             var spriteBatch = ScreenManager.SpriteBatch;
-
-            spriteBatch.Begin();
-            _player.Draw(gameTime, spriteBatch);
-            spriteBatch.End();
-
 
             float playerY = MathHelper.Clamp(_player.position.Y, 300, 9800);
             float offsetY = 300 - playerY;
@@ -92,14 +91,11 @@ namespace GameProject1.Screens
             Matrix transform = Matrix.CreateTranslation(0, offsetY, 0);
             // Foreground
 
-            spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(23, 23, 0));
-            _tilemap.Draw(gameTime, spriteBatch);
-            spriteBatch.End();
-
             transform = Matrix.CreateTranslation(0, offsetY, 0);
             spriteBatch.Begin(transformMatrix: transform);
             spriteBatch.Draw(_foreground, Vector2.Zero, Color.White);
             _player.Draw(gameTime, spriteBatch);
+            foreach (Cube cube in _cubes) { cube.Draw(); }
             spriteBatch.End();
         }
     }
