@@ -22,9 +22,15 @@ namespace GameProject1
         private SoundEffect coin;
         private Song backgroundMusic;
 
+        private double oxygen = 100;
+        private double timer;
+
         private SpriteFont _gameFont;
         private Texture2D _foreground;
-        public List<Cube> _cubes = new List<Cube>();
+        public List<Coin> _coins = new List<Coin>();
+        public List<Rock> _rocks = new List<Rock>();
+        private SoundEffect coinSound;
+
         public Person _player;
 
         public bool Win { get; set; } = false;
@@ -49,7 +55,7 @@ namespace GameProject1
 
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
-            _player = new Person(this, Color.White);            
+            _player = new Person(this, Color.White);           
 
             AdditionalScreens();
         }
@@ -120,7 +126,23 @@ namespace GameProject1
             _gameFont = Content.Load<SpriteFont>("PixelFont");
             _player.LoadContent();
             _foreground = Content.Load<Texture2D>("foreground");
-            _cubes.Add(new Cube(this));
+
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(50, 1000)));
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(400, 2000)));
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(500, 3000)));
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(600, 4000)));
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(100, 5000)));
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(200, 6000)));
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(300, 7000)));
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(400, 8000)));
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(100, 9000)));
+            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(100, 10)));
+            foreach (Coin coin in _coins) { coin.LoadContent(); }
+
+            _rocks.Add(new Rock(this, Color.Red, new Vector2(100, 10)));
+            foreach(Rock rock in _rocks) { rock.LoadContent(); }
+
+            coinSound = Content.Load<SoundEffect>("Pickup_Coin15");
         }
 
         protected override void Update(GameTime gameTime)
@@ -131,8 +153,26 @@ namespace GameProject1
 
             base.Update(gameTime);
 
+            timer += gameTime.ElapsedGameTime.TotalSeconds;
+            if (timer > 1) 
+            { 
+                oxygen--;
+                timer -= 1;                
+            }
+            
+            foreach(Coin coin in _coins)
+            {
+                if(CollisionHelper.Collides(coin.Bounds, _player.Bounds))
+                {
+                    oxygen += 3;
+                    coin.Collected = true;
+                    coinSound.Play();
+                }
+            }
+
             _player.Update(gameTime);
-            foreach (Cube cube in _cubes) { cube.Update(gameTime); }
+            foreach (Coin coin in _coins) { coin.Update(gameTime); }
+            foreach (Rock rock in _rocks) { rock.Update(gameTime); }
         }
 
         protected override void Draw(GameTime gameTime)
@@ -153,10 +193,12 @@ namespace GameProject1
             _spriteBatch.Begin(transformMatrix: transform);
             _spriteBatch.Draw(_foreground, Vector2.Zero, Color.White);
             _player.Draw(gameTime, _spriteBatch);
+            foreach (Coin coin in _coins) { coin.Draw(_spriteBatch); }
+            foreach (Rock rock in _rocks) { rock.Draw(_spriteBatch); }
             _spriteBatch.End();
 
             _spriteBatch.Begin();
-            foreach (Cube cube in _cubes) { cube.Draw(); }
+            _spriteBatch.DrawString(_gameFont, "Oxygen:" + oxygen + "%", new Vector2(10, 10), Color.LightBlue);
             _spriteBatch.End();
         }
     }

@@ -9,24 +9,17 @@ using GameProject1.StateManagement;
 using GameProject1.Collisions;
 using Microsoft.Xna.Framework.Audio;
 
+
 namespace GameProject1
 {
-    public enum Direction
-    {
-        Down,
-        Right,
-        Up,
-        Left
-    }
-
-    public class Coin
+    public class Rock
     {
         private Texture2D texture;
         private double directionTimer;
         private Color color;
         private Game game;
 
-        public Direction Direction;
+        public Direction Direction = Direction.Right;
 
         public Vector2 Position { get; set; }
 
@@ -34,7 +27,7 @@ namespace GameProject1
 
         public bool Collected { get; set; } = false;
 
-        public Coin(Game game, Color color, Vector2 position)
+        public Rock(Game game, Color color, Vector2 position)
         {
             this.game = game;
             this.color = color;
@@ -45,7 +38,7 @@ namespace GameProject1
 
         public void LoadContent()
         {
-            texture = game.Content.Load<Texture2D>("Rock");            
+            texture = game.Content.Load<Texture2D>("Rock");
         }
 
         public void Update(GameTime gameTime)
@@ -55,44 +48,38 @@ namespace GameProject1
                 Position = new Vector2(0, 0);
             }
 
-            //Update direction timer
             directionTimer += gameTime.ElapsedGameTime.TotalSeconds;
-            //switch direction every 2 secs
-            if (directionTimer > 5.0)
+
+            if (directionTimer > 3.0)
             {
                 switch (Direction)
-                {
-                    case Direction.Up:
-                        Direction = Direction.Down;
-                        break;
-                    case Direction.Down:
-                        Direction = Direction.Right;
-                        break;
+                {                                        
                     case Direction.Right:
                         Direction = Direction.Left;
                         break;
                     case Direction.Left:
-                        Direction = Direction.Up;
+                        Direction = Direction.Right;
                         break;
                 }
-                directionTimer -= 5.0;
+                directionTimer -= 3.0;
             }
 
             switch (Direction)
             {
                 case Direction.Up:
-                    Position += new Vector2(0, -1) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(0, -1) * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case Direction.Down:
-                    Position += new Vector2(0, 1) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(0, 1) * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case Direction.Left:
-                    Position += new Vector2(-1, 0) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(-1, 0) * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case Direction.Right:
-                    Position += new Vector2(1, 0) * 100 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(1, 0) * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
             }
+
             Bounds = new BoundingCircle(Position + new Vector2(8, 8), 8);
         }
 
