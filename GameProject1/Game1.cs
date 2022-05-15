@@ -212,7 +212,7 @@ namespace GameProject1
             if (CollisionHelper.Collides(restart.Bounds, _player.Bounds))
             {
                 _player.position = new Vector2(330, 300);
-                oxygen += 100;
+                oxygen = 100;
                 deaths = 0;
                 rocksHit = 0;
                 o2Collected = 0; 
