@@ -257,7 +257,7 @@ namespace GameProject1
             _spriteBatch.Begin();
             _spriteBatch.DrawString(_gameFont, "Oxygen:" + oxygen + "%", new Vector2(10, 10), o2TankColor);
             timer2 += gameTime.ElapsedGameTime.TotalSeconds;
-            if (timer2 < 10)
+            if (timer2 < 15)
             {
                 oxygen = 100;
                 _spriteBatch.DrawString(_gameFont, "The ISS has been torn to shreds by space", new Vector2(10, 50), o2TankColor);
