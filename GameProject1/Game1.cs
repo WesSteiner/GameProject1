@@ -180,7 +180,7 @@ namespace GameProject1
             timer += gameTime.ElapsedGameTime.TotalSeconds;
             if (timer > 1 && !Win) 
             { 
-                //oxygen -= 2;
+                oxygen -= 2;
                 if (oxygen == 0) Lose = true;
                 timer -= 1;                
             }
@@ -201,7 +201,7 @@ namespace GameProject1
             {
                 if(CollisionHelper.Collides(rock.Bounds, _player.Bounds))
                 {
-                    //oxygen -= 20;
+                    oxygen -= 20;
                     if (oxygen == 0) Lose = true;
                     rock.Collected = true;
                     //rock sound
