@@ -7,6 +7,7 @@ using GameProject1.Screens;
 using GameProject1.StateManagement;
 using GameProject1.Collisions;
 using System.Collections.Generic;
+using System;
 
 namespace GameProject1
 {
@@ -19,11 +20,20 @@ namespace GameProject1
         private ScreenManager _screenManager;
         private InputManager _inputManager;
 
-        private SoundEffect coin;
+        //private SoundEffect coin;
         private Song backgroundMusic;
 
+        private double deaths = 0;
+        private double o2Collected = 0;
+        private double rocksHit = 0;
         private double oxygen = 100;
         private double timer;
+        private double timer2;
+        Color o2TankColor = Color.CornflowerBlue;
+        Color rockColor = Color.RosyBrown;
+
+        private Dot restart;
+        private Dot exit;
 
         private SpriteFont _gameFont;
         private Texture2D _foreground;
@@ -34,6 +44,8 @@ namespace GameProject1
         public Person _player;
 
         public bool Win { get; set; } = false;
+
+        public bool Lose { get; set; } = false;
 
         public ColorRunScreen CRN;
 
@@ -55,55 +67,16 @@ namespace GameProject1
 
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
 
-            _player = new Person(this, Color.White);           
+            _player = new Person(this, Color.White);
+            restart = new Dot(this, o2TankColor, new Vector2(620, 9700));
+            exit = new Dot(this, rockColor, new Vector2(320, 9700));
 
             AdditionalScreens();
         }
 
         private void AdditionalScreens()
         {
-            _inputManager = new InputManager();
-            System.Random rand = new System.Random();
-            /*
-            CRN = new ColorRunScreen(this, this) 
-            {
-                inputManager = inputManager,
-                _player = new Person(this, Color.White),
-                _cubes = { new Cube(this) }
-            };
-
-            _screenManager.AddScreen(CRN, null);
-
-            
-            _screenManager.AddScreen(new CoinJumpScreen(_screenManager, this)
-            {
-                _coins =
-                {
-                    new Coin(this, Color.White, new Vector2(150, 200)) { Direction = Direction.Down}, 
-                    new Coin(this, Color.White, new Vector2(250, 200)) { Direction = Direction.Up},
-                    new Coin(this, Color.White, new Vector2(350, 200)) { Direction = Direction.Down}, 
-                    new Coin(this, Color.White, new Vector2(450, 200)) { Direction = Direction.Right}, 
-                    new Coin(this, Color.White, new Vector2(550, 200)) { Direction = Direction.Left}
-                },
-                inputManager = inputManager,
-                _player = new Person(this, Color.White)
-            }, null);
-            
-
-            _screenManager.AddScreen(new KeyholeScreen(_screenManager)
-            {
-                keyholePositions =
-                {
-                    new Keyhole(this, Color.White) {Position = new Vector2(150, 200), Bounds = new BoundingRectangle(new Vector2(150, 200), 64, 64), Action = "None"},
-                    new Keyhole(this, Color.White) {Position = new Vector2(250, 200), Bounds = new BoundingRectangle(new Vector2(250, 200), 64, 64), Action = "None"},
-                    new Keyhole(this, Color.White) {Position = new Vector2(350, 200), Bounds = new BoundingRectangle(new Vector2(350, 200), 64, 64), Action = "Play"},
-                    new Keyhole(this, Color.White) {Position = new Vector2(450, 200), Bounds = new BoundingRectangle(new Vector2(450, 200), 64, 64), Action = "Options"},
-                    new Keyhole(this, Color.White) {Position = new Vector2(550, 200), Bounds = new BoundingRectangle(new Vector2(550, 200), 64, 64), Action = "Exit"}
-                },
-                inputManager = inputManager,
-                key = new Key(this)
-            }, null);  
-            */
+            _screenManager.AddScreen(new MainMenuScreen(), null);              
         }
 
         protected override void Initialize()
@@ -127,20 +100,63 @@ namespace GameProject1
             _player.LoadContent();
             _foreground = Content.Load<Texture2D>("foreground");
 
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(50, 1000)));
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(400, 2000)));
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(500, 3000)));
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(600, 4000)));
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(100, 5000)));
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(200, 6000)));
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(300, 7000)));
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(400, 8000)));
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(100, 9000)));
-            _coins.Add(new Coin(this, Color.LightBlue, new Vector2(100, 10)));
+            Random rand = new Random();            
+            _coins.Add(new Coin(this, o2TankColor, rand));
+            _coins.Add(new Coin(this, o2TankColor, rand));
+            _coins.Add(new Coin(this, o2TankColor, rand));
+            _coins.Add(new Coin(this, o2TankColor, rand));
+            _coins.Add(new Coin(this, o2TankColor, rand));
+            _coins.Add(new Coin(this, o2TankColor, rand));
+            _coins.Add(new Coin(this, o2TankColor, rand));
+            _coins.Add(new Coin(this, o2TankColor, rand));
+            _coins.Add(new Coin(this, o2TankColor, rand));
+            _coins.Add(new Coin(this, o2TankColor, rand));
             foreach (Coin coin in _coins) { coin.LoadContent(); }
+                        
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            _rocks.Add(new Rock(this, rockColor, rand));
+            foreach (Rock rock in _rocks) { rock.LoadContent(); }
 
-            _rocks.Add(new Rock(this, Color.Red, new Vector2(100, 10)));
-            foreach(Rock rock in _rocks) { rock.LoadContent(); }
+            restart.LoadContent();
+            exit.LoadContent();
 
             coinSound = Content.Load<SoundEffect>("Pickup_Coin15");
         }
@@ -153,10 +169,19 @@ namespace GameProject1
 
             base.Update(gameTime);
 
+            if (_player.position.Y >= 9680) Win = true;
+            else if (oxygen <= 0) Lose = true;
+            else
+            {
+                Win = false;
+                Lose = false;
+            }
+
             timer += gameTime.ElapsedGameTime.TotalSeconds;
-            if (timer > 1) 
+            if (timer > 1 && !Win) 
             { 
-                oxygen--;
+                //oxygen -= 2;
+                if (oxygen == 0) Lose = true;
                 timer -= 1;                
             }
             
@@ -164,15 +189,45 @@ namespace GameProject1
             {
                 if(CollisionHelper.Collides(coin.Bounds, _player.Bounds))
                 {
-                    oxygen += 3;
+                    oxygen += 30;
                     coin.Collected = true;
                     coinSound.Play();
+                    if (oxygen > 100) oxygen = 100;
+                    o2Collected++;
                 }
+            }
+
+            foreach(Rock rock in _rocks)
+            {
+                if(CollisionHelper.Collides(rock.Bounds, _player.Bounds))
+                {
+                    //oxygen -= 20;
+                    if (oxygen == 0) Lose = true;
+                    rock.Collected = true;
+                    //rock sound
+                    rocksHit++;
+                }
+            }
+
+            if (CollisionHelper.Collides(restart.Bounds, _player.Bounds))
+            {
+                _player.position = new Vector2(330, 300);
+                oxygen += 100;
+                deaths = 0;
+                rocksHit = 0;
+                o2Collected = 0; 
+            }
+
+            if (CollisionHelper.Collides(exit.Bounds, _player.Bounds))
+            {
+                this.Exit();
             }
 
             _player.Update(gameTime);
             foreach (Coin coin in _coins) { coin.Update(gameTime); }
             foreach (Rock rock in _rocks) { rock.Update(gameTime); }
+            restart.Update(gameTime);
+            exit.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -195,10 +250,36 @@ namespace GameProject1
             _player.Draw(gameTime, _spriteBatch);
             foreach (Coin coin in _coins) { coin.Draw(_spriteBatch); }
             foreach (Rock rock in _rocks) { rock.Draw(_spriteBatch); }
+            restart.Draw(_spriteBatch);
+            exit.Draw(_spriteBatch);
             _spriteBatch.End();
 
             _spriteBatch.Begin();
-            _spriteBatch.DrawString(_gameFont, "Oxygen:" + oxygen + "%", new Vector2(10, 10), Color.LightBlue);
+            _spriteBatch.DrawString(_gameFont, "Oxygen:" + oxygen + "%", new Vector2(10, 10), o2TankColor);
+            timer2 += gameTime.ElapsedGameTime.TotalSeconds;
+            if (timer2 < 10)
+            {
+                oxygen = 100;
+                _spriteBatch.DrawString(_gameFont, "The ISS has been torn to shreds by space", new Vector2(10, 50), o2TankColor);
+                _spriteBatch.DrawString(_gameFont, "rocks!", new Vector2(10, 80), o2TankColor);
+                _spriteBatch.DrawString(_gameFont, "The oxygen tanks have scattered!", new Vector2(10, 120), o2TankColor);
+                _spriteBatch.DrawString(_gameFont, "Avoid rocks and collect more oxygen to", new Vector2(10, 160), o2TankColor);
+                _spriteBatch.DrawString(_gameFont, "survive the decent to earth!", new Vector2(10, 190), o2TankColor);
+            }
+            if (Lose)
+            {
+                deaths++;
+                _player.position = new Vector2(330, 300);
+                oxygen += 100;
+            }
+            else if (Win)
+            {
+                _spriteBatch.DrawString(_gameFont, "Deaths:" + deaths, new Vector2(10, 50), o2TankColor);
+                _spriteBatch.DrawString(_gameFont, "O2 Collected:" + o2Collected + "/10", new Vector2(10, 90), o2TankColor);
+                _spriteBatch.DrawString(_gameFont, "Rocks Hit:" + rocksHit, new Vector2(10, 130), o2TankColor);
+                _spriteBatch.DrawString(_gameFont, "Collect the blue dot to restart!", new Vector2(10, 200), o2TankColor);
+                _spriteBatch.DrawString(_gameFont, "Collect the red dot to exit.", new Vector2(10, 240), o2TankColor);
+            }
             _spriteBatch.End();
         }
     }

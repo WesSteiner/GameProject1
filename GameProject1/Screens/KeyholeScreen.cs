@@ -23,16 +23,8 @@ namespace GameProject1.Screens
         private readonly Random _random = new Random();
         private readonly ScreenManager _screenManager;
 
-        private float _pauseAlpha;
-        private readonly InputAction _pauseAction;
-
         public KeyholeScreen(ScreenManager sM)
-        {
-            _pauseAction = new InputAction(
-                new[] { Buttons.Start, Buttons.Back },
-                new[] { Keys.Back, Keys.Escape }, 
-                true
-                );
+        {            
             _screenManager = sM;
         }
 

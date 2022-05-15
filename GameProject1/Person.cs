@@ -67,8 +67,8 @@ namespace GameProject1
                 position += Vector2.UnitX * 100 * t;
                 flipped = false;
             }
-            if (keyboardState.IsKeyDown(Keys.W)) position -= Vector2.UnitY * 200 * t;
-            if (keyboardState.IsKeyDown(Keys.S)) position += Vector2.UnitY * 200 * t;
+            if (keyboardState.IsKeyDown(Keys.W)) position -= Vector2.UnitY * 100 * t;
+            if (keyboardState.IsKeyDown(Keys.S)) position += Vector2.UnitY * 300 * t;
 
             bounds.X = position.X - 55;
             bounds.Y = position.Y - 55;

@@ -27,20 +27,20 @@ namespace GameProject1
         private Game game;
 
         public Direction Direction;
-
-        public Vector2 Position { get; set; }
+        public Vector2 Position;
 
         public BoundingCircle Bounds { get; set; }
 
         public bool Collected { get; set; } = false;
 
-        public Coin(Game game, Color color, Vector2 position)
+        public Coin(Game game, Color color, Random rand)
         {
             this.game = game;
             this.color = color;
-
-            Position = position;
+            
             Bounds = new BoundingCircle(Position + new Vector2(8, 8), 8);
+            Position.X = rand.Next(50, 750);
+            Position.Y = rand.Next(500, 9500);
         }
 
         public void LoadContent()
@@ -58,7 +58,7 @@ namespace GameProject1
             //Update direction timer
             directionTimer += gameTime.ElapsedGameTime.TotalSeconds;
             //switch direction every 2 secs
-            if (directionTimer > 5.0)
+            if (directionTimer > 2.0)
             {
                 switch (Direction)
                 {
@@ -66,16 +66,10 @@ namespace GameProject1
                         Direction = Direction.Down;
                         break;
                     case Direction.Down:
-                        Direction = Direction.Right;
-                        break;
-                    case Direction.Right:
-                        Direction = Direction.Left;
-                        break;
-                    case Direction.Left:
                         Direction = Direction.Up;
-                        break;
+                        break;                    
                 }
-                directionTimer -= 5.0;
+                directionTimer -= 2.0;
             }
 
             switch (Direction)

@@ -18,22 +18,32 @@ namespace GameProject1
         private double directionTimer;
         private Color color;
         private Game game;
+        private Random rand;
+        double seconds;
 
-        public Direction Direction = Direction.Right;
-
-        public Vector2 Position { get; set; }
+        public Direction Direction;
+        public int Speed;
+        public Vector2 Position;
 
         public BoundingCircle Bounds { get; set; }
 
         public bool Collected { get; set; } = false;
 
-        public Rock(Game game, Color color, Vector2 position)
+        public Rock(Game game, Color color, Random rand)
         {
             this.game = game;
             this.color = color;
-
-            Position = position;
+            this.rand = rand;
+            
             Bounds = new BoundingCircle(Position + new Vector2(8, 8), 8);
+            
+            Speed = rand.Next(200, 800);
+            Position.X = rand.Next(50, 750);
+            Position.Y = rand.Next(500, 9500);
+            seconds = rand.Next(2, 5);
+
+            if (Position.X > 375) Direction = Direction.Left;
+            else Direction = Direction.Right;
         }
 
         public void LoadContent()
@@ -49,8 +59,8 @@ namespace GameProject1
             }
 
             directionTimer += gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (directionTimer > 3.0)
+            
+            if (directionTimer > seconds)
             {
                 switch (Direction)
                 {                                        
@@ -61,22 +71,22 @@ namespace GameProject1
                         Direction = Direction.Right;
                         break;
                 }
-                directionTimer -= 3.0;
+                directionTimer -= seconds;
             }
-
+            
             switch (Direction)
             {
                 case Direction.Up:
-                    Position += new Vector2(0, -1) * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(0, -1) * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case Direction.Down:
-                    Position += new Vector2(0, 1) * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(0, 1) * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case Direction.Left:
-                    Position += new Vector2(-1, 0) * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(-1, 0) * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
                 case Direction.Right:
-                    Position += new Vector2(1, 0) * 200 * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Position += new Vector2(1, 0) * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                     break;
             }
 
